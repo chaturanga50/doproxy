@@ -49,7 +49,7 @@ rbenv global 2.1.5
 As root, install [DigitalOcean DropletKit Gem](https://github.com/digitalocean/droplet_kit):
 
 ```
-gem install droplet_kit
+gem install droplet_kit -v 2.0.0
 ```
 
 Then clone the repo to a directory of your choice:

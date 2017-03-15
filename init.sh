@@ -7,7 +7,7 @@ eval `ssh-agent -s`
 ssh-add ~/.ssh/id_rsa
 
 CONTENT="/usr/local/doproxy"
-INVENTORY="$CONTENT/inventory"
+INVENTORY="$CONTENT/inventory_output"
 STATIC_SERVER1="10.132.224.168"
 STATIC_SERVER1_USER="root"
 STATIC_SERVER1_CPU=$(ssh $STATIC_SERVER1_USER@$STATIC_SERVER1 'cat /tmp/CPU_LOAD')
@@ -21,6 +21,9 @@ if [ "$STATIC_SERVER1_CPU" -ge "$CPU_THRESHOLD" ] && [ "$STATIC_SERVER1_MEMORY" 
     cd $CONTENT; ruby doproxy.rb create
     sleep 120
 fi
+
+cd $CONTENT
+ruby doproxy.rb print > $INVENTORY
 
 if [ "$STATIC_SERVER1_CPU" -lt "$CPU_THRESHOLD" ] && [ "$STATIC_SERVER1_MEMORY" -gt "$MEM_THRESHOLD" ];
     then
