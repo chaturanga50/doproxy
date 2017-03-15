@@ -6,17 +6,19 @@ LOG_FILE="/var/log/auto_scale.log"
 [ -f "$LOG_FILE" ] || touch "$LOG_FILE"
 exec 1>> $LOG_FILE 2>&1
 NOW=$(date +"%c")
+CONTENT="/usr/local/doproxy"
 
+cd $CONTENT
 cp id_rsa ~/.ssh/id_rsa
 chmod 600 ~/.ssh/id_rsa
 eval `ssh-agent -s`
 ssh-add ~/.ssh/id_rsa
 
-CONTENT="/usr/local/doproxy"
 INVENTORY="$CONTENT/inventory_output"
 STATIC_SERVER1="10.132.224.168"
 STATIC_SERVER1_USER="root"
-STATIC_SERVER1_CPU=$(ssh $STATIC_SERVER1_USER@$STATIC_SERVER1 'cat /tmp/CPU_LOAD | bc')
+STATIC_SERVER1_CPU_GET=$(ssh $STATIC_SERVER1_USER@$STATIC_SERVER1 'cat /tmp/CPU_LOAD | bc')
+STATIC_SERVER1_CPU=$(printf '%.*f\n' 0 $STATIC_SERVER1_CPU_GET)
 STATIC_SERVER1_MEMORY=$(ssh $STATIC_SERVER1_USER@$STATIC_SERVER1 'cat /tmp/MEMORY_USAGE | bc')
 SLEEP_TIME="60"
 
