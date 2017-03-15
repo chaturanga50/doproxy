@@ -12,6 +12,7 @@ STATIC_SERVER1="10.132.224.168"
 STATIC_SERVER1_USER="root"
 STATIC_SERVER1_CPU=$(ssh $STATIC_SERVER1_USER@$STATIC_SERVER1 'cat /tmp/CPU_LOAD | bc')
 STATIC_SERVER1_MEMORY=$(ssh $STATIC_SERVER1_USER@$STATIC_SERVER1 'cat /tmp/MEMORY_USAGE | bc')
+SLEEP_TIME="60"
 
 CPU_THRESHOLD=80
 MEM_THRESHOLD=200
@@ -19,7 +20,7 @@ MEM_THRESHOLD=200
 if [[ $STATIC_SERVER1_CPU -ge $CPU_THRESHOLD ]] && [[ $STATIC_SERVER1_MEMORY -le $MEM_THRESHOLD ]];
     then
     cd $CONTENT; ruby doproxy.rb create
-    sleep 120
+    sleep $SLEEP_TIME
 fi
 
 cd $CONTENT
@@ -29,5 +30,5 @@ if [[ $STATIC_SERVER1_CPU -lt $CPU_THRESHOLD ]] && [[ $STATIC_SERVER1_MEMORY -gt
     then
     DELETE_SERVER_ID=$(tail -n1 $INVENTORY | awk '{ print $1}' | cut -d ')' -f1)
     cd $CONTENT; ruby doproxy.rb delete $DELETE_SERVER_ID
-    sleep 120
+    sleep $SLEEP_TIME
 fi
